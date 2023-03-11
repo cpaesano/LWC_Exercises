@@ -5,9 +5,6 @@ import getInstructors from
 import getDeliveriesByInstructor from
 '@salesforce/apex/StudentBrowserForm.getDeliveriesByInstructor';
 
-
-
-
 export default class StudentBrowserForm extends LightningElement {
     instructors = [];
     Error;
@@ -18,6 +15,7 @@ export default class StudentBrowserForm extends LightningElement {
     onInstructorChange(event) {
         this.selectedDeliveryId = '';
         this.selectedInstructorId = event.target.value;
+        this.notifyParent( );
         }
 
         @wire(getDeliveriesByInstructor, {instructorId :
@@ -38,7 +36,7 @@ export default class StudentBrowserForm extends LightningElement {
                 this.error = error;
                 }
                 }    
-                
+
     @wire(getInstructors)
     wired_getInstructors({ error, data }) {
         this.instructors = [];
@@ -58,5 +56,20 @@ export default class StudentBrowserForm extends LightningElement {
         this.error = error;
         }
     }
+
+    onDeliveryChange(event) {
+        this.selectedDeliveryId = event.target.value;
+        this.notifyParent() ;
+        }
+
+        notifyParent() {
+            const evt = new CustomEvent('filterchange', {
+            detail: {
+            instructorId: this.selectedInstructorId,
+            deliveryId: this.selectedDeliveryId,
+            }
+            });
+            this.dispatchEvent(evt);
+            }
 
 }
