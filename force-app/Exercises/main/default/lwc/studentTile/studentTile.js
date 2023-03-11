@@ -5,16 +5,20 @@ export default class StudentTile extends LightningElement {
         Name: 'Carlos Paesano',
         PhotoUrl: '/services/images/photo/003B0FakePictId',
     };
-    @api isSelected = false;
+    // @api isSelected = false;
 
     get tileSelected() {
-        return this.isSelected ? "tile selected" : "tile";
-    }
-    studentClick() {
-        // alert(this.student.Name);
-        debugger;
-        console.log('Name', this.student.Name);
-        console.log('Photo', this.student.PhotoUrl);
-    }
+        return (this.selectedStudentId===this.student.Id) ?
+        "tile selected" : "tile";
+        }
+        
+    studentClick(){
+        const evt = new CustomEvent('studentselected', {
+        detail: { studentId: this.student.Id }
+        });
+        this.dispatchEvent(evt) ;
+        }
+
+        @api selectedStudentId = '';
 }
 
